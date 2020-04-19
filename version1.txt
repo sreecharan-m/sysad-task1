@@ -1,0 +1,78 @@
+
+/////////////////////////////////////////////////////////////////////////////////Sub task -1
+#!/bin/sh
+#Create accounts and home directories for the users given using useradd -m as it would create home directories for them as /home/user.the command also copies initialisation
+#files from /etc/skel
+sudo useradd -m ChiefCommander
+sudo useradd -m ArmyGeneral
+sudo useradd -m NavyMarshal
+sudo useradd -m AirforceChief
+
+for i in {1..50}
+sudo useradd -m Army$i
+sudo useradd -m Navy$i
+sudo useradd -m Airforce$i
+done
+////////////////////////////////////////Sub task-2
+#assigning rwx permission for members who have to be added in secondary group.
+#!/bin/sh
+for i in {1..50}
+do 
+sudo chmod -R 770 /home/Army$i
+sudo chmod -R 770 /home/Navy$i
+sudo chmod -R 770 /home/Airforce$i
+done
+
+#adding the previleged users in the secondary groups. 
+
+for i in {1..50}
+do 
+sudo usermod -a -G Army$i ArmyGeneral
+sudo usermod -a -G Navy$i NavyMarshal
+sudo usermod -a -G Airforce$i AirforceChief
+done
+sudo usermod -a -G ArmyGeneral,NavyMarshal,AirforceChief ChiefCommander
+
+//////////////////////////////////////////////////////////////////////////////////sub task-3
+
+#downloading the master log file
+wget https://inductions.delta.nitt.edu/sysad-task1-position.log
+
+///////////////////////////////////////////////// crontab script for showing soldiers their posts next day /////////////////////////////////////
+#!/bin/bash
+for i in {1..50}
+do
+d=$(date +%F)
+touch /home/Army$i/post_allotted.txt /home/Navy$i/post_allotted.txt /home/Airforce$i/post_allotted.txt
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-position.log | grep "Army$i" | awk '{ print $1 "|" $3 $4}' > /home/Army$i/post_allotted.txt
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-position.log | grep "Navy$i" | awk '{ print $1 "|" $3 $4}' > /home/Navy$i/post_allotted.txt
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-position.log | grep "AirForce$i" | awk '{ print $1 "|" $3 $4}' > /home/Airforce$i/post_allotted.txt
+done
+
+//////////////////////////////////////////sub task-4
+
+/////////////////////////////////////////////// crontab script to give details of attendence to respective troop cheifs ////////////////////////
+#!/bin/bash
+d=$(date +%F)
+touch /home/ArmyGeneral/attendence_record /home/NavyMarshal/attendence_record /home/AirforceChief/attendence_record
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "Army" | grep "yes" | awk '{ print $2}' > /home/ArmyGeneral/attendence_record
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "Navy" | grep "yes" | awk '{ print $2}' > /home/NavyMarshal/attendence_record
+grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "AirForce" | grep "yes" | awk '{ print $2}' > /home/AirforceChief/attendence_record
+
+////////////////////////////////////////sub task-5
+
+/////////////////////////////////////////////// script for sub task 5 to show last week nth day attendence record - for Army chief/////////////////
+#!/bin/sh
+d=$(date +%F -d 'last sunday - $1 day)
+echo 'grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "Army"'
+
+/////////////////////////////////////////////// script for sub task 5 to show last week nth day attendence record - for Navy Marshal/////////////////
+#!/bin/sh
+d=$(date +%F -d 'last sunday - $1 day)
+echo 'grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "Navy"'
+
+/////////////////////////////////////////////// script for sub task 5 to show last week nth day attendence record - for ArmyForce chief/////////////////
+#!/bin/sh
+d=$(date +%F -d 'last sunday - $1 day)
+echo 'grep "$d" https://inductions.delta.nitt.edu/sysad-task1-attendance.log | grep "AirForce"'
+
