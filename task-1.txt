@@ -100,7 +100,7 @@ grep "$d" sysad-task1-attendance.log | grep "YES" >> /home/ChiefCommander/attend
 ///////////////////////////////////////////////////////////////////////////////////// hacker2.sh
 
 #!/bin/sh
- paste sysad-task1-position.log sysad-task1-attendance.log > position2.log
+paste sysad-task1-position.log sysad-task1-attendance.log > position2.log
 d=d=$(date +%F)
 grep "$d" position2.log | grep "Army" | grep "YES" | awk '{ print $3 " " $4 }' > temp.txt
 grep "$d" position2.log | grep "Army" | grep "YES" | awk '{ print $2 }' > armyid.txt
