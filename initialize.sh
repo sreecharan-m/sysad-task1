@@ -1,3 +1,4 @@
+#!/bin/bash
 #initialising all scripts with alias and downloading files and crontab
 
 alias userGenerate='bash ./subtask1.sh'
